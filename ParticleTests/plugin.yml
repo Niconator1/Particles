@@ -1,0 +1,7 @@
+name: ParticleTest
+main: com.niconator1.particles.main.ParticlePlugin
+version: 1.0.0
+commands: 
+    test:
+        description: /test type [args]
+        aliases: [t]
