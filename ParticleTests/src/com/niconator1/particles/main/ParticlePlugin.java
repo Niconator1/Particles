@@ -23,11 +23,31 @@ public class ParticlePlugin extends JavaPlugin {
 				if (args.length > 0) {
 					String type = args[0];
 					if (type.equalsIgnoreCase("line")) {
-						LivingEntity le = Util.getClosestEntity(p);
-						if (le != null) {
-							ParticleUtil.doLine(p, le);
+						if (args.length > 1) {
+							LivingEntity le = Util.getClosestEntity(p);
+							if (le != null) {
+								ParticleUtil.doLine(p.getLocation().add(0, 0.9, 0), le.getLocation(),
+										Double.parseDouble(args[1]));
+							} else {
+								p.sendMessage("There are no entitys around you");
+							}
 						} else {
-							p.sendMessage("There are no entitys around you");
+							p.sendMessage("Usage /test line distance");
+						}
+
+					} else if (type.equalsIgnoreCase("circle")) {
+						if (args.length > 2) {
+							ParticleUtil.doCircle(p.getLocation().add(0, 0.9, 0), Double.parseDouble(args[1]),
+									Double.parseDouble(args[2]));
+						} else {
+							p.sendMessage("Usage /test circle radius distance");
+						}
+					} else if (type.equalsIgnoreCase("sphere")) {
+						if (args.length > 3) {
+							ParticleUtil.doSphere(p.getLocation().add(0, 0.9, 0), Double.parseDouble(args[1]),
+									Double.parseDouble(args[2]), Double.parseDouble(args[2]));
+						} else {
+							p.sendMessage("Usage /test sphere radius distancey distancexz");
 						}
 					} else {
 						p.sendMessage("Usage /test type [args]");

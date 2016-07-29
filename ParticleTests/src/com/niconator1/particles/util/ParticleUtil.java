@@ -3,7 +3,6 @@ package com.niconator1.particles.util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -12,12 +11,10 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutWorldParticles;
 
 public class ParticleUtil {
 
-	public static void doLine(LivingEntity l, LivingEntity le) {
-		Location start = l.getLocation();
-		Location destication = le.getLocation();
-		double distance = destication.distance(start);
-		Vector direction = destication.subtract(start).toVector().normalize();
-		for (double i = 0; i < distance; i += 0.1) {
+	public static void doLine(Location start, Location destination, double distancebetween) {
+		double distance = destination.distance(start);
+		Vector direction = destination.subtract(start).toVector().normalize();
+		for (double i = 0; i < distance; i += distancebetween) {
 			Location particle = start.clone().add(direction.clone().multiply(i));
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				sendParticlePacket(p, EnumParticle.FLAME, particle, 1);
@@ -35,5 +32,32 @@ public class ParticleUtil {
 		PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(type, true, (float) x, (float) y,
 				(float) z, vx, vy, vz, v, count, null);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+	}
+
+	public static void doSphere(Location mid, double maxradius, double distancey,double distancexz) {
+		for (double i = 0; i < 2.0 * Math.PI * maxradius; i += distancey) {
+			double y = Math.sin(0.5 * (i / maxradius - Math.PI)) * maxradius;
+			double radius = Math.sin(i / 2.0 / maxradius) * maxradius;
+			doCircle(mid.clone().add(0, y, 0), radius, distancexz);
+		}
+	}
+
+	public static void doCircle(Location mid, double radius, double distancebetween) {
+		for (double i = 0; i < 2 * Math.PI * radius; i += distancebetween) {
+			double x = Math.sin(i / radius) * radius;
+			double z = Math.cos(i / radius) * radius;
+			Location particle = mid.clone().add(x, 0, z);
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				sendParticlePacket(p, EnumParticle.FLAME, particle, 1);
+			}
+		}
+	}
+
+	public static void doPylonInverted(Location mid, double maxradius, double distancebetween) {
+		for (double i = 0; i < Math.PI * maxradius; i += 0.1) {
+			double y = -0.5 * Math.PI * maxradius + i;
+			double radius = i;
+			doCircle(mid.clone().add(0, y, 0), radius, distancebetween);
+		}
 	}
 }
