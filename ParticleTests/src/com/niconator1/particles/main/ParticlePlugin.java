@@ -37,7 +37,14 @@ public class ParticlePlugin extends JavaPlugin {
 
 					} else if (type.equalsIgnoreCase("circle")) {
 						if (args.length > 2) {
-							ParticleUtil.doCircle(p.getLocation().add(0, 0.9, 0), Double.parseDouble(args[1]),
+							ParticleUtil.doCircle(p.getLocation(), Double.parseDouble(args[1]),
+									Double.parseDouble(args[2]));
+						} else {
+							p.sendMessage("Usage /test circle radius distance");
+						}
+					} else if (type.equalsIgnoreCase("star")) {
+						if (args.length > 2) {
+							ParticleUtil.doStar(p.getLocation(), Double.parseDouble(args[1]),
 									Double.parseDouble(args[2]));
 						} else {
 							p.sendMessage("Usage /test circle radius distance");
