@@ -62,11 +62,12 @@ public class ParticleUtil {
 	}
 	
 	public static void doStar(Location mid, double radius, double distancebetween) {
-		doStar(mid, radius, distancebetween);
+		doCircle(mid, radius, distancebetween);
 		for (int i = 0; i < 5; i++) {
 			int second = (i+2)%5;
-			Location start = mid.clone().add(Math.cos(2.0*Math.PI*0.2*radius*i), 0.0, Math.sin(2.0*Math.PI*0.2*radius*i));
-			Location destination = mid.clone().add(Math.cos(2.0*Math.PI*0.2*radius*second), 0.0, Math.sin(2.0*Math.PI*0.2*radius*second));
+			Location start = mid.clone().add(Math.cos(2.0*Math.PI*0.2*i)*radius, 0.0, Math.sin(2.0*Math.PI*0.2*i)*radius);
+			Location destination = mid.clone().add(Math.cos(2.0*Math.PI*0.2*second)*radius, 0.0, Math.sin(2.0*Math.PI*0.2*second)*radius);
+			System.out.println(start.toVector()+" "+destination.toVector());
 			doLine(start, destination, distancebetween);
 		}
 	}
