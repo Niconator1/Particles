@@ -67,7 +67,6 @@ public class ParticleUtil {
 			int second = (i+2)%5;
 			Location start = mid.clone().add(Math.cos(2.0*Math.PI*0.2*i)*radius, 0.0, Math.sin(2.0*Math.PI*0.2*i)*radius);
 			Location destination = mid.clone().add(Math.cos(2.0*Math.PI*0.2*second)*radius, 0.0, Math.sin(2.0*Math.PI*0.2*second)*radius);
-			System.out.println(start.toVector()+" "+destination.toVector());
 			doLine(start, destination, distancebetween);
 		}
 	}
