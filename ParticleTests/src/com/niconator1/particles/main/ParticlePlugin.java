@@ -1,5 +1,7 @@
 package com.niconator1.particles.main;
 
+import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
@@ -23,44 +25,100 @@ public class ParticlePlugin extends JavaPlugin {
 				if (args.length > 0) {
 					String type = args[0];
 					if (type.equalsIgnoreCase("line")) {
-						if (args.length > 1) {
+						if (args.length > 2) {
 							LivingEntity le = Util.getClosestEntity(p);
 							if (le != null) {
-								ParticleUtil.doLine(p.getLocation().add(0, 0.9, 0), le.getLocation(),
-										Double.parseDouble(args[1]));
+								ParticleUtil.doLine(args[1], p.getLocation().add(0, 0.9, 0), le.getLocation(),
+										Double.parseDouble(args[2]));
 							} else {
-								p.sendMessage("There are no entitys around you");
+								sender.sendMessage("There are no entitys around you");
 							}
 						} else {
-							p.sendMessage("Usage /test line distance");
+							sender.sendMessage("Usage /test line particle distance");
 						}
 
 					} else if (type.equalsIgnoreCase("circle")) {
-						if (args.length > 2) {
-							ParticleUtil.doCircle(p.getLocation(), Double.parseDouble(args[1]),
-									Double.parseDouble(args[2]));
+						if (args.length > 3) {
+							ParticleUtil.doCircle(args[1], p.getLocation(), Double.parseDouble(args[2]),
+									Double.parseDouble(args[3]));
 						} else {
-							p.sendMessage("Usage /test circle radius distance");
+							sender.sendMessage("Usage /test circle particle radius distance");
 						}
 					} else if (type.equalsIgnoreCase("star")) {
-						if (args.length > 2) {
-							ParticleUtil.doStar(p.getLocation(), Double.parseDouble(args[1]),
-									Double.parseDouble(args[2]));
+						if (args.length > 3) {
+							ParticleUtil.doStar(args[1], p.getLocation(), Double.parseDouble(args[2]),
+									Double.parseDouble(args[3]));
 						} else {
-							p.sendMessage("Usage /test star radius distance");
+							sender.sendMessage("Usage /test star particle radius distance");
 						}
 					} else if (type.equalsIgnoreCase("sphere")) {
 						if (args.length > 3) {
-							ParticleUtil.doSphere(p.getLocation().add(0, 0.9, 0), Double.parseDouble(args[1]),
-									Double.parseDouble(args[2]), Double.parseDouble(args[2]));
+							ParticleUtil.doSphere(args[1], p.getLocation().add(0, 0.9, 0), Double.parseDouble(args[2]),
+									Double.parseDouble(args[3]));
 						} else {
-							p.sendMessage("Usage /test sphere radius distancey distancexz");
+							sender.sendMessage("Usage /test sphere particle radius distance");
+						}
+					} else if (type.equalsIgnoreCase("gravisphere")) {
+						if (args.length > 3) {
+							ParticleUtil.doGraviSphere(p.getLocation().add(0, 0.9, 0), Double.parseDouble(args[1]),
+									Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+						} else {
+							sender.sendMessage("Usage /test gravisphere radius rings duration");
 						}
 					} else {
-						p.sendMessage("Usage /test type [args]");
+						sender.sendMessage("Usage /test type [args]");
 					}
 				} else {
-					p.sendMessage("Usage /test type [args]");
+					sender.sendMessage("Usage /test type [args]");
+				}
+			} else if (sender instanceof BlockCommandSender) {
+				Location l = ((BlockCommandSender) sender).getBlock().getLocation();
+				if (args.length > 0) {
+					String type = args[0];
+					if (type.equalsIgnoreCase("line")) {
+						if (args.length > 2) {
+							LivingEntity le = Util.getClosestEntity(l);
+							if (le != null) {
+								ParticleUtil.doLine(args[1], l.add(0, 0.9, 0), le.getLocation(),
+										Double.parseDouble(args[2]));
+							} else {
+								sender.sendMessage("There are no entitys around you");
+							}
+						} else {
+							sender.sendMessage("Usage /test line particle distance");
+						}
+
+					} else if (type.equalsIgnoreCase("circle")) {
+						if (args.length > 3) {
+							ParticleUtil.doCircle(args[1], l, Double.parseDouble(args[2]), Double.parseDouble(args[3]));
+						} else {
+							sender.sendMessage("Usage /test circle particle radius distance");
+						}
+					} else if (type.equalsIgnoreCase("star")) {
+						if (args.length > 3) {
+							ParticleUtil.doStar(args[1], l, Double.parseDouble(args[2]), Double.parseDouble(args[3]));
+						} else {
+							sender.sendMessage("Usage /test star particleradius distance");
+						}
+					} else if (type.equalsIgnoreCase("sphere")) {
+						if (args.length > 3) {
+							ParticleUtil.doSphere(args[1], l.add(0, 0.9, 0), Double.parseDouble(args[2]),
+									Double.parseDouble(args[3]));
+						} else {
+							sender.sendMessage("Usage /test sphere particle radius distance");
+						}
+					} else if (type.equalsIgnoreCase("gravisphere")) {
+						if (args.length > 3) {
+							ParticleUtil.doGraviSphere(l.add(0, 0.9, 0), Double.parseDouble(args[1]),
+									Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+						} else {
+							sender.sendMessage("Usage /test gravisphere radius rings duration");
+						}
+					} else {
+						sender.sendMessage("Usage /test type [args]");
+					}
+				} else {
+					sender.sendMessage("Usage /test type [args]");
 				}
 			} else {
 				sender.sendMessage("You have to be a player");

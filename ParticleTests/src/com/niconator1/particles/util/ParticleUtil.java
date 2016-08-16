@@ -1,30 +1,71 @@
 package com.niconator1.particles.util;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
+import com.niconator1.particles.Circle;
+import com.niconator1.particles.Gravisphere;
+import com.niconator1.particles.Line;
+import com.niconator1.particles.Sphere;
+import com.niconator1.particles.Star;
 
 import net.minecraft.server.v1_10_R1.EnumParticle;
 import net.minecraft.server.v1_10_R1.PacketPlayOutWorldParticles;
 
 public class ParticleUtil {
 
-	public static void doLine(Location start, Location destination, double distancebetween) {
-		double distance = destination.distance(start);
-		Vector direction = destination.subtract(start).toVector().normalize();
-		for (double i = 0; i < distance; i += distancebetween) {
-			Location particle = start.clone().add(direction.clone().multiply(i));
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				sendParticlePacket(p, EnumParticle.FLAME, particle, 1);
-			}
+	public static void doLine(String particle, Location start, Location destination, double distancebetween) {
+		EnumParticle effect = EnumParticle.a(particle);
+		if (effect != null) {
+			Line l = new Line(start, effect, destination, distancebetween, new Vector(0, 0, 0), 0, 0);
+			l.start();
 		}
 	}
 
-	private static void sendParticlePacket(Player p, EnumParticle type, Location l, int count) {
+	public static void doCircle(String particle, Location mid, double radius, double distancebetween) {
+		EnumParticle effect = EnumParticle.a(particle);
+		if (effect != null) {
+			Circle c = new Circle(mid, effect, radius, distancebetween, new Vector(0, 0, 0), 0, 0);
+			c.start();
+		}
+	}
+
+	public static void doSphere(String particle, Location mid, double radius, double distancebetween) {
+		EnumParticle effect = EnumParticle.a(particle);
+		if (effect != null) {
+			Sphere c = new Sphere(mid, effect, radius, distancebetween, new Vector(0, 0, 0), 0, 0);
+			c.start();
+		}
+	}
+
+	public static void doStar(String particle, Location mid, double radius, double distancebetween) {
+		EnumParticle effect = EnumParticle.a(particle);
+		if (effect != null) {
+			Star s = new Star(mid, effect, radius, distancebetween, new Vector(0, 0, 0), 0, 0);
+			s.start();
+		}
+	}
+
+	public static void doGraviSphere(Location mid, double radius, int circles, int dur) {
+		Gravisphere g = new Gravisphere(mid, radius, circles, dur);
+		g.start();
+	}
+
+	public static void sendParticlePacket(Player p, EnumParticle type, Location l, int count) {
 		sendParticlePacket(p, type, l.getX(), l.getY(), l.getZ(), 0, 0, 0, 0, count);
 
+	}
+
+	public static void sendParticlePacket(Player p, EnumParticle type, Location l, Vector v3d, float v, int count) {
+		sendParticlePacket(p, type, l.getX(), l.getY(), l.getZ(), (float) v3d.getX(), (float) v3d.getY(),
+				(float) v3d.getZ(), v, count);
+	}
+
+	public static void sendParticlePacket(Player p, EnumParticle type, Location l, float vx, float vy, float vz,
+			float v, int count) {
+		sendParticlePacket(p, type, l.getX(), l.getY(), l.getZ(), vx, vy, vz, v, count);
 	}
 
 	public static void sendParticlePacket(Player p, EnumParticle type, double x, double y, double z, float vx, float vy,
@@ -32,42 +73,5 @@ public class ParticleUtil {
 		PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(type, true, (float) x, (float) y,
 				(float) z, vx, vy, vz, v, count, null);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-	}
-
-	public static void doSphere(Location mid, double maxradius, double distancey,double distancexz) {
-		for (double i = 0; i < 2.0 * Math.PI * maxradius; i += distancey) {
-			double y = Math.sin(0.5 * (i / maxradius - Math.PI)) * maxradius;
-			double radius = Math.sin(i / 2.0 / maxradius) * maxradius;
-			doCircle(mid.clone().add(0, y, 0), radius, distancexz);
-		}
-	}
-
-	public static void doCircle(Location mid, double radius, double distancebetween) {
-		for (double i = 0; i < 2 * Math.PI * radius; i += distancebetween) {
-			double x = Math.sin(i / radius) * radius;
-			double z = Math.cos(i / radius) * radius;
-			Location particle = mid.clone().add(x, 0, z);
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				sendParticlePacket(p, EnumParticle.FLAME, particle, 1);
-			}
-		}
-	}
-
-	public static void doPylonInverted(Location mid, double maxradius, double distancebetween) {
-		for (double i = 0; i < Math.PI * maxradius; i += 0.1) {
-			double y = -0.5 * Math.PI * maxradius + i;
-			double radius = i;
-			doCircle(mid.clone().add(0, y, 0), radius, distancebetween);
-		}
-	}
-	
-	public static void doStar(Location mid, double radius, double distancebetween) {
-		doCircle(mid, radius, distancebetween);
-		for (int i = 0; i < 5; i++) {
-			int second = (i+2)%5;
-			Location start = mid.clone().add(Math.cos(2.0*Math.PI*0.2*i)*radius, 0.0, Math.sin(2.0*Math.PI*0.2*i)*radius);
-			Location destination = mid.clone().add(Math.cos(2.0*Math.PI*0.2*second)*radius, 0.0, Math.sin(2.0*Math.PI*0.2*second)*radius);
-			doLine(start, destination, distancebetween);
-		}
 	}
 }
