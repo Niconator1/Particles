@@ -98,7 +98,7 @@ public class ParticlePlugin extends JavaPlugin {
 						if (args.length > 3) {
 							ParticleUtil.doStar(args[1], l, Double.parseDouble(args[2]), Double.parseDouble(args[3]));
 						} else {
-							sender.sendMessage("Usage /test star particleradius distance");
+							sender.sendMessage("Usage /test star particle particleradius distance");
 						}
 					} else if (type.equalsIgnoreCase("sphere")) {
 						if (args.length > 3) {
